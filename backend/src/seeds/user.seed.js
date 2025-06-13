@@ -5,98 +5,95 @@ import User from "../models/user.model.js";
 config();
 
 const seedUsers = [
-  // Female Users
   {
-    email: "emma.thompson@example.com",
-    fullName: "Emma Thompson",
-    password: "123456",
-    profilePic: "https://randomuser.me/api/portraits/women/1.jpg",
-  },
-  {
-    email: "olivia.miller@example.com",
-    fullName: "Olivia Miller",
-    password: "123456",
-    profilePic: "https://randomuser.me/api/portraits/women/2.jpg",
-  },
-  {
-    email: "sophia.davis@example.com",
-    fullName: "Sophia Davis",
-    password: "123456",
-    profilePic: "https://randomuser.me/api/portraits/women/3.jpg",
-  },
-  {
-    email: "ava.wilson@example.com",
-    fullName: "Ava Wilson",
-    password: "123456",
-    profilePic: "https://randomuser.me/api/portraits/women/4.jpg",
-  },
-  {
-    email: "isabella.brown@example.com",
-    fullName: "Isabella Brown",
-    password: "123456",
-    profilePic: "https://randomuser.me/api/portraits/women/5.jpg",
-  },
-  {
-    email: "mia.johnson@example.com",
-    fullName: "Mia Johnson",
-    password: "123456",
-    profilePic: "https://randomuser.me/api/portraits/women/6.jpg",
-  },
-  {
-    email: "charlotte.williams@example.com",
-    fullName: "Charlotte Williams",
-    password: "123456",
-    profilePic: "https://randomuser.me/api/portraits/women/7.jpg",
-  },
-  {
-    email: "amelia.garcia@example.com",
-    fullName: "Amelia Garcia",
-    password: "123456",
-    profilePic: "https://randomuser.me/api/portraits/women/8.jpg",
-  },
-
-  // Male Users
-  {
-    email: "james.anderson@example.com",
-    fullName: "James Anderson",
-    password: "123456",
-    profilePic: "https://randomuser.me/api/portraits/men/1.jpg",
-  },
-  {
-    email: "william.clark@example.com",
-    fullName: "William Clark",
-    password: "123456",
-    profilePic: "https://randomuser.me/api/portraits/men/2.jpg",
-  },
-  {
-    email: "benjamin.taylor@example.com",
-    fullName: "Benjamin Taylor",
-    password: "123456",
-    profilePic: "https://randomuser.me/api/portraits/men/3.jpg",
-  },
-  {
-    email: "lucas.moore@example.com",
-    fullName: "Lucas Moore",
-    password: "123456",
-    profilePic: "https://randomuser.me/api/portraits/men/4.jpg",
-  },
-  {
-    email: "henry.jackson@example.com",
-    fullName: "Henry Jackson",
+    email: "aditya.bose@example.com",
+    fullName: "Aditya Bose",
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/men/5.jpg",
   },
   {
-    email: "alexander.martin@example.com",
-    fullName: "Alexander Martin",
+    email: "sakshi.mehta@example.com",
+    fullName: "Sakshi Mehta",
+    password: "123456",
+    profilePic: "https://randomuser.me/api/portraits/women/4.jpg",
+  },
+  {
+    email: "tanya.das@example.com",
+    fullName: "Tanya Das",
+    password: "123456",
+    profilePic: "https://randomuser.me/api/portraits/women/8.jpg",
+  },
+  {
+    email: "vivaan.singh@example.com",
+    fullName: "Vivaan Singh",
+    password: "123456",
+    profilePic: "https://randomuser.me/api/portraits/men/3.jpg",
+  },
+  {
+    email: "shruti.rao@example.com",
+    fullName: "Shruti Rao",
+    password: "123456",
+    profilePic: "https://randomuser.me/api/portraits/women/5.jpg",
+  },
+  {
+    email: "riya.sen@example.com",
+    fullName: "Riya Sen",
+    password: "123456",
+    profilePic: "https://randomuser.me/api/portraits/women/7.jpg",
+  },
+  {
+    email: "ravi.menon@example.com",
+    fullName: "Ravi Menon",
+    password: "123456",
+    profilePic: "https://randomuser.me/api/portraits/men/7.jpg",
+  },
+  {
+    email: "ananya.verma@example.com",
+    fullName: "Ananya Verma",
+    password: "123456",
+    profilePic: "https://randomuser.me/api/portraits/women/2.jpg",
+  },
+  {
+    email: "krishna.nair@example.com",
+    fullName: "Krishna Nair",
+    password: "123456",
+    profilePic: "https://randomuser.me/api/portraits/men/4.jpg",
+  },
+  {
+    email: "isha.patel@example.com",
+    fullName: "Isha Patel",
+    password: "123456",
+    profilePic: "https://randomuser.me/api/portraits/women/3.jpg",
+  },
+  {
+    email: "rahul.kumar@example.com",
+    fullName: "Rahul Kumar",
+    password: "123456",
+    profilePic: "https://randomuser.me/api/portraits/men/1.jpg",
+  },
+  {
+    email: "siddharth.chopra@example.com",
+    fullName: "Siddharth Chopra",
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/men/6.jpg",
   },
   {
-    email: "daniel.rodriguez@example.com",
-    fullName: "Daniel Rodriguez",
+    email: "arjun.reddy@example.com",
+    fullName: "Arjun Reddy",
     password: "123456",
-    profilePic: "https://randomuser.me/api/portraits/men/7.jpg",
+    profilePic: "https://randomuser.me/api/portraits/men/2.jpg",
+  },
+  {
+    email: "neha.jain@example.com",
+    fullName: "Neha Jain",
+    password: "123456",
+    profilePic: "https://randomuser.me/api/portraits/women/6.jpg",
+  },
+  {
+    email: "priya.sharma@example.com",
+    fullName: "Priya Sharma",
+    password: "123456",
+    profilePic: "https://randomuser.me/api/portraits/women/1.jpg",
   },
 ];
 
