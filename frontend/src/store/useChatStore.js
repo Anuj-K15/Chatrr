@@ -27,6 +27,10 @@ export const useChatStore = create((set, get) => ({
     try {
       const res = await axiosInstance.get(`/messages/${userId}`);
       set({ messages: res.data });
+      if (userId) {
+        await axiosInstance.put(`/messages/read/${userId}`);
+        get().getUsers();
+      }
     } catch (error) {
       toast.error(error.response.data.message);
     } finally {
@@ -42,6 +46,7 @@ export const useChatStore = create((set, get) => ({
         messageData
       );
       set({ messages: [...messages, res.data] });
+      get().getUsers();
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -58,6 +63,7 @@ export const useChatStore = create((set, get) => ({
         newMessage.senderId === selectedUser._id;
       if (!isMessageSentFromSelectedUser) return;
       set({ messages: [...get().messages, newMessage] });
+      get().getUsers();
     });
   },
 

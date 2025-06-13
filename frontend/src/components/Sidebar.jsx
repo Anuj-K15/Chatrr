@@ -71,6 +71,11 @@ const Sidebar = () => {
                   rounded-full ring-2 ring-zinc-900"
                 />
               )}
+              {user.unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-primary text-primary-content text-xs font-medium px-1.5 py-0.5 rounded-full min-w-[1.25rem] flex items-center justify-center">
+                  {user.unreadCount}
+                </span>
+              )}
             </div>
 
             {/* User info - only visible on larger screens */}

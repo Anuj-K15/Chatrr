@@ -12,7 +12,7 @@ export const getUsersForSidebar = async (req, res) => {
       _id: { $ne: loggedInUserId },
     }).select("-password");
 
-    // Get the last message timestamp for each user
+    // Get the last message timestamp and unread count for each user
     const usersWithLastMessage = await Promise.all(
       users.map(async (user) => {
         const lastMessage = await Message.findOne({
@@ -22,9 +22,17 @@ export const getUsersForSidebar = async (req, res) => {
           ],
         }).sort({ createdAt: -1 });
 
+        // Get unread message count
+        const unreadCount = await Message.countDocuments({
+          senderId: user._id,
+          receiverId: loggedInUserId,
+          read: false,
+        });
+
         return {
           ...user.toObject(),
           lastMessageTimestamp: lastMessage ? lastMessage.createdAt : new Date(0),
+          unreadCount,
         };
       })
     );
@@ -92,6 +100,29 @@ export const sendMessage = async (req, res) => {
     res.status(201).json(newMessage);
   } catch (error) {
     console.log("Error in sendMessage Controller:", error.message);
+    res.status(500).json({ error: "Internal Server error" });
+  }
+};
+
+export const markMessagesAsRead = async (req, res) => {
+  try {
+    const { senderId } = req.params;
+    const receiverId = req.user._id;
+
+    await Message.updateMany(
+      {
+        senderId,
+        receiverId,
+        read: false,
+      },
+      {
+        $set: { read: true },
+      }
+    );
+
+    res.status(200).json({ message: "Messages marked as read" });
+  } catch (error) {
+    console.log("Error in markMessagesAsRead:", error.message);
     res.status(500).json({ error: "Internal Server error" });
   }
 };
