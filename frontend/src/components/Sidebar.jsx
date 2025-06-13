@@ -4,6 +4,7 @@ import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { Users } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useState } from "react";
+import { formatMessageTime } from "../lib/utils";
 
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
@@ -74,10 +75,15 @@ const Sidebar = () => {
             </div>
 
             {/* User info - only visible on larger screens */}
-            <div className="hidden lg:block text-left min-w-0">
+            <div className="hidden lg:block text-left min-w-0 flex-1">
               <div className="font-medium truncate">{user.fullName}</div>
-              <div className="text-sm text-zinc-400">
-                {onlineUsers.includes(user._id) ? "Online" : "Offline"}
+              <div className="text-sm text-zinc-400 flex items-center justify-between">
+                <span>{onlineUsers.includes(user._id) ? "Online" : "Offline"}</span>
+                {user.lastMessageTimestamp && (
+                  <span className="text-xs">
+                    {formatMessageTime(user.lastMessageTimestamp)}
+                  </span>
+                )}
               </div>
             </div>
           </button>
