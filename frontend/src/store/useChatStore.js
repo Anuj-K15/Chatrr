@@ -28,12 +28,8 @@ export const useChatStore = create((set, get) => ({
       const res = await axiosInstance.get(`/messages/${userId}`);
       set({ messages: res.data });
       if (userId) {
-        const socket = useAuthStore.getState().socket;
-        const authUser = useAuthStore.getState().authUser;
-        socket.emit("markMessagesAsRead", {
-          senderId: userId,
-          receiverId: authUser._id,
-        });
+        await axiosInstance.put(`/messages/read/${userId}`);
+        get().getUsers();
       }
     } catch (error) {
       toast.error(error.response.data.message);
@@ -50,6 +46,7 @@ export const useChatStore = create((set, get) => ({
         messageData
       );
       set({ messages: [...messages, res.data] });
+      get().getUsers();
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -60,26 +57,19 @@ export const useChatStore = create((set, get) => ({
     if (!selectedUser) return;
 
     const socket = useAuthStore.getState().socket;
-    const authUser = useAuthStore.getState().authUser;
 
     socket.on("newMessage", (newMessage) => {
       const isMessageSentFromSelectedUser =
         newMessage.senderId === selectedUser._id;
       if (!isMessageSentFromSelectedUser) return;
       set({ messages: [...get().messages, newMessage] });
-    });
-
-    socket.on("messagesRead", ({ receiverId }) => {
-      if (receiverId === authUser._id) {
-        get().getUsers();
-      }
+      get().getUsers();
     });
   },
 
   unsubscribeFromMessages: () => {
     const socket = useAuthStore.getState().socket;
     socket.off("newMessage");
-    socket.off("messagesRead");
   },
 
   setSelectedUser: (selectedUser) => set({ selectedUser }),
