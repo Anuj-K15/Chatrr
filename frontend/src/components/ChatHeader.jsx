@@ -6,6 +6,8 @@ const ChatHeader = () => {
   const { selectedUser, setSelectedUser } = useChatStore();
   const { onlineUsers } = useAuthStore();
 
+  if (!selectedUser) return null;
+
   return (
     <div className="p-2.5 border-b border-base-300">
       <div className="flex items-center justify-between">
@@ -30,11 +32,15 @@ const ChatHeader = () => {
         </div>
 
         {/* Close button */}
-        <button onClick={() => setSelectedUser(null)}>
-          <X />
+        <button 
+          onClick={() => setSelectedUser(null)}
+          className="p-2 hover:bg-base-300 rounded-full transition-colors"
+        >
+          <X className="size-5" />
         </button>
       </div>
     </div>
   );
 };
+
 export default ChatHeader;

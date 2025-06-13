@@ -23,14 +23,25 @@ export const useChatStore = create((set, get) => ({
   },
 
   getMessages: async (userId) => {
+    if (!userId) return;
+    
     set({ isMessagesLoading: true });
     try {
       const res = await axiosInstance.get(`/messages/${userId}`);
       set({ messages: res.data });
-      if (userId) {
-        await axiosInstance.put(`/messages/read/${userId}`);
-        get().getUsers();
-      }
+      await axiosInstance.put(`/messages/read/${userId}`);
+      // Update users list to reset unread count for the selected user
+      const currentUsers = get().users;
+      const updatedUsers = currentUsers.map(user => {
+        if (user._id === userId) {
+          return {
+            ...user,
+            unreadCount: 0
+          };
+        }
+        return user;
+      });
+      set({ users: updatedUsers });
     } catch (error) {
       toast.error(error.response.data.message);
     } finally {
@@ -40,6 +51,8 @@ export const useChatStore = create((set, get) => ({
 
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
+    if (!selectedUser) return;
+    
     try {
       const res = await axiosInstance.post(
         `/messages/send/${selectedUser._id}`,
@@ -53,17 +66,58 @@ export const useChatStore = create((set, get) => ({
   },
 
   subscribeToMessages: () => {
-    const { selectedUser } = get();
-    if (!selectedUser) return;
-
     const socket = useAuthStore.getState().socket;
 
     socket.on("newMessage", (newMessage) => {
-      const isMessageSentFromSelectedUser =
-        newMessage.senderId === selectedUser._id;
-      if (!isMessageSentFromSelectedUser) return;
-      set({ messages: [...get().messages, newMessage] });
-      get().getUsers();
+      const { selectedUser, users } = get();
+      let updatedUsers;
+
+      // If a chat is selected
+      if (selectedUser) {
+        // If the message is from the selected user, add to messages and reset unread
+        if (newMessage.senderId === selectedUser._id) {
+          set({ messages: [...get().messages, newMessage] });
+        }
+        updatedUsers = users.map(user => {
+          if (user._id === newMessage.senderId) {
+            // If this is the selected user, reset unread
+            if (user._id === selectedUser._id) {
+              return {
+                ...user,
+                lastMessageTimestamp: newMessage.createdAt,
+                unreadCount: 0
+              };
+            } else {
+              // For other users, increment unread
+              return {
+                ...user,
+                lastMessageTimestamp: newMessage.createdAt,
+                unreadCount: (user.unreadCount || 0) + 1
+              };
+            }
+          }
+          return user;
+        });
+      } else {
+        // No chat selected: increment only the sender's unread count
+        updatedUsers = users.map(user => {
+          if (user._id === newMessage.senderId) {
+            return {
+              ...user,
+              lastMessageTimestamp: newMessage.createdAt,
+              unreadCount: (user.unreadCount || 0) + 1
+            };
+          }
+          return user;
+        });
+      }
+
+      // Sort users by last message timestamp
+      const sortedUsers = updatedUsers.sort(
+        (a, b) => new Date(b.lastMessageTimestamp) - new Date(a.lastMessageTimestamp)
+      );
+
+      set({ users: sortedUsers });
     });
   },
 
@@ -72,5 +126,31 @@ export const useChatStore = create((set, get) => ({
     socket.off("newMessage");
   },
 
-  setSelectedUser: (selectedUser) => set({ selectedUser }),
+  setSelectedUser: (selectedUser) => {
+    // If no user is selected, just clear the state
+    if (!selectedUser) {
+      set({ selectedUser: null, messages: [] });
+      return;
+    }
+
+    // Reset unread count when selecting a user
+    const currentUsers = get().users;
+    const updatedUsers = currentUsers.map(user => {
+      if (user._id === selectedUser._id) {
+        return {
+          ...user,
+          unreadCount: 0
+        };
+      }
+      return user;
+    });
+
+    set({ 
+      selectedUser,
+      users: updatedUsers,
+      messages: []
+    });
+
+    get().getMessages(selectedUser._id);
+  },
 }));
