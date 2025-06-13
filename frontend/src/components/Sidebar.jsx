@@ -9,12 +9,21 @@ import { formatMessageTime } from "../lib/utils";
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
     useChatStore();
-  const { onlineUsers } = useAuthStore();
+  const { onlineUsers, socket } = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
   useEffect(() => {
     getUsers();
-  }, [getUsers]);
+
+    // Listen for real-time updates
+    socket.on("updateUserList", () => {
+      getUsers();
+    });
+
+    return () => {
+      socket.off("updateUserList");
+    };
+  }, [getUsers, socket]);
 
   const filteredUsers = showOnlineOnly
     ? users.filter((user) => onlineUsers.includes(user._id))

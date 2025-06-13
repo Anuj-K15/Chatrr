@@ -1,7 +1,7 @@
 import User from "../models/user.model.js";
 import Message from "../models/message.model.js";
 import cloudinary from "../lib/cloudinary.js";
-import { getRecieverSocketId, io } from "../lib/socket.js";
+import { getRecieverSocketId, getIO } from "../lib/socket.js";
 
 export const getUsersForSidebar = async (req, res) => {
   try {
@@ -74,7 +74,6 @@ export const sendMessage = async (req, res) => {
     const { id: receiverId } = req.params;
     const senderId = req.user._id;
 
-    //////
     let imageUrl;
     if (image) {
       // Upload base64 image to cloudinary
@@ -91,10 +90,14 @@ export const sendMessage = async (req, res) => {
 
     await newMessage.save();
 
-    //todo: realtime functionality goes here with socket.io
+    // Get the receiver's socket id
     const receiverSocketId = getRecieverSocketId(receiverId);
     if (receiverSocketId) {
-      io.to(receiverSocketId).emit("newMessage", newMessage);
+      // Send the message to the receiver
+      getIO().to(receiverSocketId).emit("newMessage", newMessage);
+      
+      // Update the receiver's user list
+      getIO().to(receiverSocketId).emit("updateUserList");
     }
 
     res.status(201).json(newMessage);
