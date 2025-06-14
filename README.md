@@ -2,6 +2,8 @@
 
 A modern real-time chat application built with React, Node.js, and Socket.IO.
 
+# Live on: https://chatrr-k2vh.onrender.com
+
 ![License](https://img.shields.io/badge/license-ISC-blue.svg)
 ![Version](https://img.shields.io/badge/version-1.0.0-green.svg)
 
